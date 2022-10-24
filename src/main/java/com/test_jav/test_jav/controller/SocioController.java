@@ -27,51 +27,51 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/socios")
 public class SocioController {
 
-    private SocioService socioSerSocioService;
+    private SocioService socioService;
 
     // CRIA NOVO SÓCIO
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Socio postSocio(@RequestBody @Valid Socio socio) {
-        return socioSerSocioService.salvar(socio);
+        return socioService.salvar(socio);
     }
 
-    // RETORNAS TODOS OS SÓCIOS
+    // RETORNA TODOS OS SÓCIOS
     @GetMapping
     public List<Socio> getAllSocios() {
-        return socioSerSocioService.findAll();
+        return socioService.findAll();
     }
 
     // RETORNA SÓCIO ESPECÍFICO PELO ID
     @GetMapping("/{socioId}")
     public ResponseEntity<Socio> getOneSocio(@PathVariable Long socioId) {
-        Optional<Socio> socioOpt = socioSerSocioService.findById(socioId);
+        Optional<Socio> socioOpt = socioService.findById(socioId);
 
         return socioOpt.isPresent()
-            ? ResponseEntity.ok(socioOpt.get()) 
-            : ResponseEntity.notFound().build();
+                ? ResponseEntity.ok(socioOpt.get())
+                : ResponseEntity.notFound().build();
     }
 
     // MODIFICA SÓCIO ESPECÍFICO PELO ID
     @PutMapping("/{socioId}")
-    public ResponseEntity<Socio> updateSocio (@PathVariable Long socioId, @RequestBody @Valid Socio socio) {
-        if (!socioSerSocioService.existsById(socioId)) {
+    public ResponseEntity<Socio> updateSocio(@PathVariable Long socioId, @RequestBody @Valid Socio socio) {
+        if (!socioService.existsById(socioId)) {
             return ResponseEntity.notFound().build();
         }
 
         socio.setId(socioId);
-        socio = socioSerSocioService.salvar(socio);
+        socio = socioService.salvar(socio);
         return ResponseEntity.ok(socio);
     }
 
     // EXCLUI SÓCIO ESPECÍFICO PELO ID
     @DeleteMapping("/{socioId}")
-    public ResponseEntity<Void> deleteSocio (@PathVariable Long socioId) {
-        if (!socioSerSocioService.existsById(socioId)) {
+    public ResponseEntity<Void> deleteSocio(@PathVariable Long socioId) {
+        if (!socioService.existsById(socioId)) {
             return ResponseEntity.notFound().build();
         }
 
-        socioSerSocioService.excluir(socioId);
+        socioService.excluir(socioId);
         return ResponseEntity.noContent().build();
     }
 
