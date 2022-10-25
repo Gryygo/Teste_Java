@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+		/>
+		<link rel="stylesheet" href="/styles/custom.css" />
+		<title>Sócios</title>
+	</head>
+	<body>
+		<!-- Modal Content -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form action="#" th:action="@{/socios/salvar}" th:object="${socio}" method="post">
+						<div class="mb-3">
+						  <label for="nomeSocio" class="form-label w-100">
+							  Nome
+							  <input required th:field="*{nome}" type="text" class="form-control" aria-describedby="nomeHelp">
+						</label>
+						  <div id="nomeHelp" class="form-text">Deve conter entre 5 e 50 caracteres</div>
+						</div>
+						<div class="mb-3">
+							<label for="rendaSocio" class="form-label w-100">
+								Renda
+								<input required th:field="*{renda}"  type="number" class="form-control" aria-describedby="rendaHelp">
+							</label>
+							<div id="rendaHelp" class="form-text">Deve ser maior ou igual a zero</div>
+						</div>
+						<div class="mb-3 form-check">
+							<label class="form-check-label" for="ativoSocio">
+								<input th:field="*{ativo}" type="checkbox" class="form-check-input">
+								Ativo
+							</label>
+						</div>
+						<button type="submit" class="btn btn-primary">Salvar</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					</form>
+				</div>
+			</div>
+			</div>
+		</div>
+  
+		<!-- Page Content -->
+		<nav th:replace="base :: navBar"></nav>
+		<main class="ps__container container d-flex flex-column align-items-center justify-content-around">
+			<div class="container d-flex flex-column align-items-center justify-content-between">
+				<div>
+					<button type="button" class="ps__button p-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						<i class="bi bi-person-plus-fill fs-5"></i> Adicionar novo sócio
+					</button> 
+				</div>
+				<!-- <form action="">
+					<label for="nomeSocio">Nome:</label>
+					<input type="text" name="nomeSocio" id="nomeSocio">
+				</form> -->
+			</div>
+			<table class="table rounded-4 overflow-hidden">
+				<thead class="ps__bluebg">
+					<tr>
+						<th scope="col" class="text-light">Id</th>
+						<th scope="col" class="border border-start-1 border-light text-light">
+							Nome
+						</th>
+						<th scope="col" class="border border-start-1 border-light text-light">
+							Ativo
+						</th>
+						<th scope="col" class="border border-start-1 border-light text-light">
+							Renda
+						</th>
+						<th scope="col" class="border border-start-1 border-light text-light">
+							Dependentes
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="socio: ${sociosList}">
+						<td
+							th:attr="onclick=|fakeLink('${socio.id}')|"
+							th:text="${socio.id}"
+							class="border border-1"
+						/>
+						<td
+							th:attr="onclick=|fakeLink('${socio.id}')|"
+							th:text="${socio.nome}"
+							class="border border-1"
+						/>
+						<td
+							th:text="${socio.ativo} ? 'Sim' : 'Não'"
+							th:attr="
+								class=${!socio.ativo ? 'ps-red border border-1' : 'ps-green border border-1'},
+								onclick=|fakeLink('${socio.id}')|"
+						/>
+						<td
+							th:attr="onclick=|fakeLink('${socio.id}')|"
+							th:text="${socio.renda}"
+							class="border border-1"
+						/>
+						<td
+							th:attr="onclick=|fakeLink('${socio.id}')|"
+							th:text="${#lists.size(socio.dependentes)}"
+							class="border border-1"
+						/>
+					</tr>
+				</tbody>
+			</table>
+			<ul class="nav nav-pills">
+				<li class="nav-item" th:each="i: ${#numbers.sequence(0, sociosList.totalPages-1)}">
+					<a th:href="@{/socios/(page=${i})}" th:text="${i+1}" class="nav-link"></a>
+				</li>
+			</ul>
+		</main>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+			crossorigin="anonymous"
+		></script>
+		<script src="/js/scripts.js"></script>
+	</body>
+</html>

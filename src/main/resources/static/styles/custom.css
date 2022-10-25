@@ -1,0 +1,109 @@
+.ps__body {
+  overflow: hidden;
+}
+
+.ps__container {
+  height: 90vh;
+  min-height: 90vh;
+}
+
+.ps__navbar {
+  min-height: 10vh;
+  background-color: #4483B3;
+}
+
+.ps__row {
+  height: 100%;
+}
+
+.ps__button {
+  background-color: #4483B3;
+  color: white;
+  border-radius: 0.6rem;
+  border: none;
+  transition: transform 0.3s;
+}
+.ps__button:hover {
+  transform: scale(0.95);
+}
+
+.ps__bluebg {
+  background-color: #4483B3;
+}
+
+.ps__bluecolor {
+  color: #4483B3;
+}
+
+.ps__card {
+  height: 20rem;
+  background-color: #4483B3;
+  transition: transform 0.3s;
+  border: none;
+  -webkit-animation: riseUp 0.4s ease-out forwards;
+          animation: riseUp 0.4s ease-out forwards;
+}
+.ps__card:hover {
+  transform: scale(0.95);
+}
+
+@-webkit-keyframes riseUp {
+  from {
+    top: 50%;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes riseUp {
+  from {
+    top: 50%;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    top: 0;
+  }
+}
+.ps__border {
+  border: 2px solid black;
+}
+
+.ps__font {
+  font-size: 5rem;
+}
+
+tbody > tr {
+  transition: background-color 0.3s;
+}
+tbody > tr:hover {
+  background-color: #e6f4ff;
+  cursor: pointer;
+}
+tbody > tr:hover td {
+  border: none !important;
+}
+
+td, th {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.ps-red {
+  color: rgb(211, 78, 78);
+}
+
+.ps-green {
+  color: rgb(74, 219, 74);
+}
+
+.ps-active {
+  font-weight: bold;
+  color: rgb(255, 164, 122);
+}/*# sourceMappingURL=custom.css.map */

@@ -1,6 +1,5 @@
 package com.test_jav.test_jav.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -38,11 +37,6 @@ public class SocioService {
     @Transactional
     public void excluir(Long socioId) {
         socioRepository.deleteById(socioId);
-    }
-
-    // Retorna todos os sócios
-    public List<Socio> findAll() {
-        return socioRepository.findAll();
     }
 
     // Retorna um sócio

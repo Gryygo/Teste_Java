@@ -1,55 +1,75 @@
 package com.test_jav.test_jav.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.test_jav.test_jav.model.Socio;
+import com.test_jav.test_jav.repository.SocioRepository;
 import com.test_jav.test_jav.service.SocioService;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@RestController
+// @RestController
+@Controller
 @RequestMapping("/socios")
 public class SocioController {
 
     private SocioService socioService;
+    private SocioRepository socioRepository;
 
     // CRIA NOVO SÓCIO
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Socio postSocio(@RequestBody @Valid Socio socio) {
-        return socioService.salvar(socio);
+    @PostMapping("/salvar")
+    // @ResponseStatus(HttpStatus.CREATED)
+    public String postSocio(@ModelAttribute("socio") @Valid Socio socio) {
+        socioService.salvar(socio);
+
+        return "redirect:/socios/";
     }
+
+    // @PostMapping("/salvar")
+// @ResponseStatus(HttpStatus.CREATED)
+// public String postSocio(@ModelAttribute("socio") @Valid Socio socio) {
+//     socioService.salvar(socio);
+
+//     return "redirect:/socios";
+// }
 
     // RETORNA TODOS OS SÓCIOS
     @GetMapping
-    public List<Socio> getAllSocios() {
-        return socioService.findAll();
+    public String getAllSocios(Model model, Socio socio,@RequestParam(defaultValue = "0") int page) {
+
+        model.addAttribute("sociosList", socioRepository.findAll(PageRequest.of(page, 6)));
+        model.addAttribute("titulo", "socios");
+
+        return "socios";
     }
 
     // RETORNA SÓCIO ESPECÍFICO PELO ID
     @GetMapping("/{socioId}")
-    public ResponseEntity<Socio> getOneSocio(@PathVariable Long socioId) {
+    public String getOneSocio(@PathVariable Long socioId, Model model) {
         Optional<Socio> socioOpt = socioService.findById(socioId);
 
+        model.addAttribute("socio", socioOpt.get());
+
         return socioOpt.isPresent()
-                ? ResponseEntity.ok(socioOpt.get())
-                : ResponseEntity.notFound().build();
+                ? "socioDetail"
+                : "notFound";
     }
 
     // MODIFICA SÓCIO ESPECÍFICO PELO ID
@@ -76,3 +96,11 @@ public class SocioController {
     }
 
 }
+
+// @PostMapping("/salvar")
+// @ResponseStatus(HttpStatus.CREATED)
+// public String postSocio(@ModelAttribute("socio") @Valid Socio socio) {
+//     socioService.salvar(socio);
+
+//     return "redirect:/socios";
+// }
