@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,11 +33,16 @@ public class DependenteController {
 
     // CRIA NOVO DEPENDENTE
     @PostMapping("/salvar")
-    public String postDependente(@ModelAttribute("dependente") @Valid Dependente dependente) {
+    public String postDependente(@ModelAttribute("dependente") @Valid Dependente dependente, BindingResult result) {
+
+        String url = "redirect:/socios/%id".replace("%id", String.valueOf(dependente.getSocio().getId()));
+
+        if (result.hasErrors()) {
+            return url;
+        }
 
         dependenteService.salvar(dependente);
 
-        String url = "redirect:/socios/%id".replace("%id", String.valueOf(dependente.getSocio().getId()));
 
         return url;
     }
@@ -75,14 +81,19 @@ public class DependenteController {
 
     // MODIFICA DEPENDENTE ESPECÍFICO PELO ID
     @RequestMapping("/editar/{depId}")
-    public String updateDependente(@PathVariable Long depId, @Valid Dependente dependente) {
+    public String updateDependente(@PathVariable Long depId, @Valid Dependente dependente, BindingResult result) {
         if (!dependenteService.existsById(depId)) {
             return "notFound";
+        }
+        
+        String url = "redirect:/dependentes/%id".replace("%id", String.valueOf(depId));
+
+        if (result.hasErrors()) {
+            return url;
         }
 
         dependente.setId(depId);
         dependente = dependenteService.salvar(dependente);
-        String url = "redirect:/dependentes/%id".replace("%id", String.valueOf(depId));
 
         return url;
     }

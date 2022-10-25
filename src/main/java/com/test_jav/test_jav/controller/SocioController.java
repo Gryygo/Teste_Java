@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,12 @@ public class SocioController {
     // CRIA NOVO SÓCIO
     @PostMapping("/salvar")
     // @ResponseStatus(HttpStatus.CREATED)
-    public String postSocio(@ModelAttribute("socio") @Valid Socio socio) {
+    public String postSocio(@ModelAttribute("socio") @Valid Socio socio, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "/socios";
+        }
+
         socioService.salvar(socio);
 
         return "redirect:/socios/";
@@ -76,15 +82,20 @@ public class SocioController {
 
     // MODIFICA SÓCIO ESPECÍFICO PELO ID
     @RequestMapping("/editar/{socioId}")
-    public String updateSocio(@PathVariable Long socioId, @Valid Socio socio) {
+    public String updateSocio(@PathVariable Long socioId, @Valid Socio socio, BindingResult result) {
         if (!socioService.existsById(socioId)) {
             return "notFound";
+        }
+        
+        String url = "redirect:/socios/%id".replace("%id", String.valueOf(socioId));
+
+        if (result.hasErrors()) {
+            return url;
         }
 
         socio.setId(socioId);
         socio.setDependentes(socioService.findById(socioId).get().getDependentes());
         socio = socioService.salvar(socio);
-        String url = "redirect:/socios/%id".replace("%id", String.valueOf(socioId));
 
         return url;
     }
