@@ -5,19 +5,15 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.test_jav.test_jav.model.Dependente;
 import com.test_jav.test_jav.repository.DependenteRepository;
@@ -35,54 +31,71 @@ public class DependenteController {
     private DependenteService dependenteService;
 
     // CRIA NOVO DEPENDENTE
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Dependente postDependente(@RequestBody @Valid Dependente dependente) {
-        return dependenteService.salvar(dependente);
+    @PostMapping("/salvar")
+    public String postDependente(@ModelAttribute("dependente") @Valid Dependente dependente) {
+
+        dependenteService.salvar(dependente);
+
+        String url = "redirect:/socios/%id".replace("%id", String.valueOf(dependente.getSocio().getId()));
+
+        return url;
     }
 
     // RETORNA TODOS OS DEPENDENTES
     @GetMapping
     public String getAllDependentes(Model model, Dependente dependente,@RequestParam(defaultValue = "0") int page) {
-        // List<Socio> socios =  socioService.findAll();
 
-        model.addAttribute("dependentesList", dependenteRepository.findAll(PageRequest.of(page, 6)));
+        model.addAttribute("dependentesList", dependenteRepository.findAll(PageRequest.of(page, 6, Sort.by("id"))));
         model.addAttribute("titulo", "dependentes");
 
         return "dependentes";
     }
 
+
+    // RETORNA PESQUISA PARA SÓCIO
+    @GetMapping("/search")
+    public String searchDependentes(Model model, @RequestParam String nomeS) {
+
+        model.addAttribute("dependentesPesquisa", dependenteRepository.findByNomeContaining(nomeS));
+
+        return "dependentesSearchResults";
+    }
+
     // RETORNA DEPENDENTE ESPECÍFICO PELO ID
     @GetMapping("/{depId}")
-    public ResponseEntity<Dependente> getOneDependente(@PathVariable Long depId) {
+    public String getOneDependente(@PathVariable Long depId, Model model, Dependente dependente) {
         Optional<Dependente> dependenteOpt = dependenteService.findById(depId);
 
+        model.addAttribute("dependente", dependenteOpt.get());
+
         return dependenteOpt.isPresent()
-                ? ResponseEntity.ok(dependenteOpt.get())
-                : ResponseEntity.notFound().build();
+                ? "dependenteDetail"
+                : "notFound";
     }
 
     // MODIFICA DEPENDENTE ESPECÍFICO PELO ID
-    @PutMapping("/{depId}")
-    public ResponseEntity<Dependente> updateDependente(@PathVariable Long depId,
-            @RequestBody @Valid Dependente dependente) {
+    @RequestMapping("/editar/{depId}")
+    public String updateDependente(@PathVariable Long depId, @Valid Dependente dependente) {
         if (!dependenteService.existsById(depId)) {
-            return ResponseEntity.notFound().build();
+            return "notFound";
         }
 
         dependente.setId(depId);
         dependente = dependenteService.salvar(dependente);
-        return ResponseEntity.ok(dependente);
+        String url = "redirect:/dependentes/%id".replace("%id", String.valueOf(depId));
+
+        return url;
     }
 
     // EXCLUI DEPENDENTE ESPECÍFICO PELO ID
-    @DeleteMapping("/{depId}")
-    public ResponseEntity<Void> deleteDependente(@PathVariable Long depId) {
-        if (!dependenteService.existsById(depId)) {
-            return ResponseEntity.notFound().build();
+    @RequestMapping("/excluir/{dependenteId}")
+    public String deleteDependente(@PathVariable Long dependenteId) {
+        if (!dependenteService.existsById(dependenteId)) {
+            return "notFound";
         }
 
-        dependenteService.excluir(depId);
-        return ResponseEntity.noContent().build();
+        dependenteService.excluir(dependenteId);
+        return "redirect:/dependentes";
     }
+
 }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+		/>
+		<link rel="stylesheet" href="/styles/custom.css" />
+		<title>Detalhes</title>
+	</head>
+	<body class="ps__body">
+
+        <!-- Modal Delete Dependente -->
+        <div class="modal fade" id="deleteDepModal" tabindex="-1" aria-labelledby="deleteDepModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteDepModalLabel">Deseja excluir esse dependente?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{'/dependentes/excluir/'+ ${dependente.id}}" method="post">
+                        <strong>
+                            <p>Essa ação não pode ser desfeita!</p>
+                        </strong>
+                        <button type="submit" class="btn btn-secondary">Excluir</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit Dependente -->
+		<div class="modal fade" id="editDepModal" tabindex="-1" aria-labelledby="editDepModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h1 class="modal-title fs-5" id="editDepModalLabel">Editar dependente:</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form action="#" th:action="@{'/dependentes/editar/'+ ${dependente.id}}" th:object="${dependente}" method="post">
+						<p th:if="${#fields.hasErrors('nome')}">Nome inválido</p>
+						<p th:if="${#fields.hasErrors('idade')}">Idade inválida</p>
+						<div class="mb-3">
+						  <label for="nome" class="form-label w-100">
+							  Nome
+							  <input required name="nome" id="nome" th:value="${dependente.nome}" maxlength="50" minlength="5" type="text" class="form-control" aria-describedby="nomeHelp">
+						</label>
+						  <div id="nomeHelp" class="form-text">Deve conter entre 5 e 50 caracteres</div>
+						</div>
+						<div class="mb-3">
+							<label for="idade" class="form-label w-100">
+								Idade
+								<input required name="idade" id="idade" th:value="${dependente.idade}" min="0" max="150"  type="number" class="form-control" aria-describedby="idadeHelp">
+							</label>
+							<div id="idadeHelp" class="form-text">Deve ser maior ou igual a zero</div>
+						</div>
+						<input required name="socio" id="socio" th:value="${dependente.socio.id}" type="hidden" class="form-control" aria-hidden="true">
+						<button type="submit" class="btn btn-primary">Editar</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					</form>
+				</div>
+			</div>
+			</div>
+		</div>
+
+        <!-- Page Content -->
+		<nav th:replace="base :: navBar"></nav>
+		<main class="ps__container container d-flex flex-row align-items-center justify-content-center">
+            <div class="ps__cardhalf w-50 card fs-4 row text-center d-flex align-items-center justify-content-evenly">
+                <div class="container">
+                    <div class="row text-start">
+                        <span class="col"><strong>Nome:</strong> <span th:text="${dependente.nome}"></span></span>
+                        <span class="col"><strong>Id:</strong> <span th:text="${dependente.id}"></span></span>
+                    </div>
+                    <div class="row text-start">
+                        <span class="col"><strong>Idade:</strong> <span th:text="${dependente.idade}"></span></span>
+                        <span class="col"><strong>Socio:</strong> <span th:text="${dependente.socio.nome}"></span></span>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap w-100 flex-row align-items-center justify-content-evenly">
+                    <button class="ps__button m-1 ps__width" data-bs-toggle="modal" data-bs-target="#editDepModal">Editar</button>
+                    <button class="ps__button m-1 ps__width" data-bs-toggle="modal" data-bs-target="#deleteDepModal">Excluir</button>
+                </div>
+            </div>
+		</main>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>

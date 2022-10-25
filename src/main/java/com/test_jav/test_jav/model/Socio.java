@@ -2,6 +2,7 @@ package com.test_jav.test_jav.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,7 +52,7 @@ public class Socio {
     private boolean ativo;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "socio")
+    @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Dependente> dependentes;
 
 }

@@ -18,61 +18,15 @@
 		<title>Sócios</title>
 	</head>
 	<body>
-		<!-- Modal Content -->
-		<div class="modal fade" id="addSocioModal" tabindex="-1" aria-labelledby="addSocioModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-				<h1 class="modal-title fs-5" id="addSocioModalLabel">Adicionar sócio:</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form action="#" th:action="@{/socios/salvar}" th:object="${socio}" method="post">
-						<p th:if="${#fields.hasErrors('nome')}">Nome inválido</p>
-						<p th:if="${#fields.hasErrors('renda')}">Renda inválida</p>
-						<div class="mb-3">
-						  <label for="nome" class="form-label w-100">
-							  Nome
-							  <input required th:field="*{nome}" maxlength="50" minlength="5" type="text" class="form-control" aria-describedby="nomeHelp">
-						</label>
-						  <div id="nomeHelp" class="form-text">Deve conter entre 5 e 50 caracteres</div>
-						</div>
-						<div class="mb-3">
-							<label for="renda" class="form-label w-100">
-								Renda
-								<input required th:field="*{renda}" step=".01" min="0" max="9999999999"  type="number" class="form-control" aria-describedby="rendaHelp">
-							</label>
-							<div id="rendaHelp" class="form-text">Deve ser maior ou igual a zero</div>
-						</div>
-						<div class="mb-3 form-check">
-							<label class="form-check-label" for="ativo">
-								<input th:field="*{ativo}" type="checkbox" class="form-check-input">
-								Ativo
-							</label>
-						</div>
-						<button type="submit" class="btn btn-primary">Salvar</button>
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-					</form>
-				</div>
-			</div>
-			</div>
-		</div>
-  
-		<!-- Page Content -->
 		<nav th:replace="base :: navBar"></nav>
 		<main class="ps__container container d-flex flex-column align-items-center justify-content-around">
-			<div class="container d-flex flex-column align-items-center justify-content-between">
-				<div>
-					<button type="button" class="ps__button p-2" data-bs-toggle="modal" data-bs-target="#addSocioModal">
-						<i class="bi bi-person-plus-fill fs-5"></i> Adicionar novo sócio
-					</button> 
-				</div>
+			<div class="container h-25 d-flex flex-column align-items-center justify-content-between">
 				<form class="m-2 d-flex flex-row" th:action="@{/socios/search}">
 					<input class="form-control m-1" placeholder="Pesquise por nome" type="text" name="nomeS" id="nomeS">
 					<button class="ps__button m-1" type="submit">Pesquisar</i></button>
 				</form>
 			</div>
-			<div class="container w-100 overflow-scroll">
+			<div class="container h-75 w-100 overflow-scroll">
 				<table class="table rounded-4 overflow-hidden table-responsive" data-order='[[1, "desc"]]'>
 					<thead class="ps__bluebg">
 						<tr>
@@ -92,7 +46,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="socio: ${sociosList}">
+						<tr th:each="socio: ${sociosPesquisa}">
 							<td
 								th:attr="onclick=|fakeLinkSocio('${socio.id}')|"
 								th:text="${socio.id}"
@@ -128,11 +82,6 @@
 					</tbody>
 				</table>
 			</div>
-			<ul class="nav nav-pills">
-				<li class="nav-item" th:each="i: ${#numbers.sequence(0, sociosList.totalPages-1)}">
-					<a th:href="@{/socios/(page=${i})}" th:text="${i+1}" class="nav-link"></a>
-				</li>
-			</ul>
 		</main>
 
 		<script

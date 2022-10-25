@@ -18,10 +18,108 @@
 		<title>Detalhes</title>
 	</head>
 	<body class="ps__body">
+
+        <!-- Modal Delete Content -->
+        <div class="modal fade" id="deleteSocioModal" tabindex="-1" aria-labelledby="deleteSocioModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteSocioModalLabel">Deseja excluir esse sócio?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{'/socios/excluir/'+ ${socio.id}}" method="post">
+                        <strong>
+                            <p>Essa ação não pode ser desfeita!</p>
+                        </strong>
+                        <button type="submit" class="btn btn-secondary">Excluir</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit Socio -->
+		<div class="modal fade" id="editSocioModal" tabindex="-1" aria-labelledby="editSocioModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h1 class="modal-title fs-5" id="editSocioModalLabel">Editar sócio:</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form action="#" th:action="@{'/socios/editar/'+ ${socio.id}}" th:object="${socio}" method="post">
+						<p th:if="${#fields.hasErrors('nome')}">Nome inválido</p>
+						<p th:if="${#fields.hasErrors('renda')}">Renda inválida</p>
+						<div class="mb-3">
+						  <label for="nome" class="form-label w-100">
+							  Nome
+							  <input required name="nome" id="nome" th:value="${socio.nome}" maxlength="50" minlength="5" type="text" class="form-control" aria-describedby="nomeHelp">
+						</label>
+						  <div id="nomeHelp" class="form-text">Deve conter entre 5 e 50 caracteres</div>
+						</div>
+						<div class="mb-3">
+							<label for="renda" class="form-label w-100">
+								Renda
+								<input required name="renda" id="renda" th:value="${socio.renda}" step=".01" min="0" max="9999999999"  type="number" class="form-control" aria-describedby="rendaHelp">
+							</label>
+							<div id="rendaHelp" class="form-text">Deve ser maior ou igual a zero</div>
+						</div>
+						<div class="mb-3 form-check">
+							<label class="form-check-label" for="ativo">
+								<input name="ativo" id="ativo" th:attr="checked=${socio.ativo ? 'true' : 'false'}" type="checkbox" class="form-check-input">
+								Ativo
+							</label>
+						</div>
+						<button type="submit" class="btn btn-primary">Editar</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					</form>
+				</div>
+			</div>
+			</div>
+		</div>
+
+        <!-- Modal Add Dependente Content -->
+        <div class="modal fade" id="addDepModal" tabindex="-1" aria-labelledby="addDepModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addDepModalLabel">Adicionar dependente:</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+					<form action="#" th:action="@{/dependentes/salvar}" th:object="${dependente}" method="post">
+						<p th:if="${#fields.hasErrors('nome')}">Nome inválido</p>
+						<p th:if="${#fields.hasErrors('idade')}">Idade inválida</p>
+						<div class="mb-3">
+						  <label for="nomeDependente" class="form-label w-100">
+							  Nome
+							  <input required th:field="*{nome}" maxlength="50" minlength="5" type="text" class="form-control" aria-describedby="nomeHelp">
+						</label>
+						  <div id="nomeHelp" class="form-text">Deve conter entre 5 e 50 caracteres</div>
+						</div>
+						<div class="mb-3">
+							<label for="idadeDependente" class="form-label w-100">
+								Idade
+								<input required th:field="*{idade}" min="0" max="150" type="number" class="form-control" aria-describedby="idadeHelp">
+							</label>
+							<div id="idadeHelp" class="form-text">Deve ser maior ou igual a zero</div>
+						</div>
+                        <input required name="socio" id="socio" th:value="${socio.id}" type="hidden" class="form-control" aria-hidden="true">
+						<button type="submit" class="btn btn-primary">Salvar</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					</form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
 		<nav th:replace="base :: navBar"></nav>
 		<main class="ps__container container d-flex flex-row align-items-center justify-content-center">
             <div class="h-100 w-100 row text-center d-flex align-items-center justify-content-evenly">
-                <div class="fs-4 h-50 col-md-5 text-start d-flex flex-column align-items-center justify-content-around">
+                <div class="fs-4 card h-50 col-md-5 text-start d-flex flex-column align-items-center justify-content-around">
                     <div class="container">
                         <div class="row text-center">
                             <span class="col"><strong>Nome:</strong> <span th:text="${socio.nome}"></span></span>
@@ -32,9 +130,9 @@
                             <span class="col"><strong>Ativo:</strong> <span th:text="${socio.ativo} ? 'Sim' : 'Não'"></span></span>
                         </div>
                     </div>
-                    <div class="d-flex w-100 flex-row align-items-center justify-content-evenly">
-                        <a class="ps__button w-25 text-center">Editar</a>
-                        <button class="ps__button w-25">Excluir</button>
+                    <div class="d-flex flex-wrap w-100 flex-row align-items-center justify-content-evenly">
+                        <button class="ps__button m-1 ps__width" data-bs-toggle="modal" data-bs-target="#editSocioModal">Editar</button>
+                        <button class="ps__button m-1 ps__width" data-bs-toggle="modal" data-bs-target="#deleteSocioModal">Excluir</button>
                     </div>
                 </div>
                 <div class="col-md-5">
@@ -48,19 +146,15 @@
                         </thead>
                         <tbody>
                             <tr th:each="dependente: ${socio.dependentes}">
-                                <td th:text="${dependente.id}" class="border border-1" />
-                                <td th:text="${dependente.nome}" class="border border-1" />
-                                <td th:text="${dependente.idade}" class="border border-1" />
+                                <td th:attr="onclick=|fakeLinkDep('${dependente.id}')|" style="width: 20%;" th:text="${dependente.id}" class="border border-1" />
+                                <td th:attr="onclick=|fakeLinkDep('${dependente.id}')|" style="width: 60%;" th:text="${dependente.nome}" class="border border-1" />
+                                <td th:attr="onclick=|fakeLinkDep('${dependente.id}')|" style="width: 20%;" th:text="${dependente.idade}" class="border border-1" />
                             </tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" onclick="window.location.href = `/dependentes/cadastrar`">
-                                    Adionar Dependente
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
+                    <button class="ps__button w-100 h-100" data-bs-toggle="modal" data-bs-target="#addDepModal">
+                        Adicionar dependente
+                    </button>
                 </div>
             </div>
 		</main>
@@ -70,5 +164,6 @@
 			integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
 			crossorigin="anonymous"
 		></script>
+		<script src="/js/scripts.js"></script>
 	</body>
 </html>

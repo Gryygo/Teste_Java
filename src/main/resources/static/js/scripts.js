@@ -1,8 +1,8 @@
-function fakeLink (id) {
-    return window.location.href = `socios/${id}`;
+function fakeLinkSocio (id) {
+    return window.location.href = `http://localhost:8080/socios/${id}`; // !! Deve ser atualizado no deploy
 }
 
-function addDepLink () {
-    return window.location.href = `dependentes/cadastrar`;
+function fakeLinkDep (id) {
+    return window.location.href = `http://localhost:8080/dependentes/${id}`; // !! Deve ser atualizado no deploy
 }
 

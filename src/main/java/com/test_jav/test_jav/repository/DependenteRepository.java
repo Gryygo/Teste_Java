@@ -12,7 +12,6 @@ import com.test_jav.test_jav.model.Dependente;
 public interface DependenteRepository extends JpaRepository<Dependente, Long> {
     
     List<Dependente> findByNomeContaining(String nome);
-    // Boolean existsByNome(String nome);
     Optional<Dependente> findByNome(String nome);
 
 }

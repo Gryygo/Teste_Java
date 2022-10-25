@@ -22,6 +22,13 @@
 		<main
 			class="ps__container container d-flex flex-column align-items-center justify-content-around"
 		>
+		<div class="container d-flex flex-column align-items-center justify-content-between">
+			<form class="m-2 d-flex flex-row" th:action="@{/dependentes/search}">
+				<input class="form-control m-1" placeholder="Pesquise por nome" type="text" name="nomeS" id="nomeS">
+				<button class="ps__button m-1" type="submit">Pesquisar</i></button>
+			</form>
+		</div>
+		<div class="container w-100 overflow-scroll">
 			<table class="table rounded-4 overflow-hidden">
 				<thead class="ps__bluebg">
 					<tr>
@@ -40,28 +47,29 @@
 				<tbody>
 					<tr th:each="dependente: ${dependentesList}">
 						<td
-							th:attr="onclick=|fakeLink('${dependente.socio.id}')|"
+							th:attr="onclick=|fakeLinkDep('${dependente.id}')|"
 							th:text="${dependente.id}"
 							class="border border-1"
 						/>
 						<td
-							th:attr="onclick=|fakeLink('${dependente.socio.id}')|"
+							th:attr="onclick=|fakeLinkDep('${dependente.id}')|"
 							th:text="${dependente.nome}"
 							class="border border-1"
 						/>
 						<td
-							th:attr="onclick=|fakeLink('${dependente.socio.id}')|"
+							th:attr="onclick=|fakeLinkDep('${dependente.id}')|"
 							th:text="${dependente.idade}"
 							class="border border-1"
 						/>
 						<td
-							th:attr="onclick=|fakeLink('${dependente.socio.id}')|"
+							th:attr="onclick=|fakeLinkDep('${dependente.id}')|"
 							th:text="${dependente.socio.nome}"
 							class="border border-1"
 						/>
 					</tr>
 				</tbody>
 			</table>
+		</div>
 			<ul class="nav nav-pills">
 				<li
 					class="nav-item"

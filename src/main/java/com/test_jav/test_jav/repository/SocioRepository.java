@@ -12,7 +12,6 @@ import com.test_jav.test_jav.model.Socio;
 public interface SocioRepository extends JpaRepository<Socio, Long> {
     
     List<Socio> findByNomeContaining(String nome);
-    // Boolean existsByNome(String nome);
     Optional<Socio> findByNome(String nome);
 
 }

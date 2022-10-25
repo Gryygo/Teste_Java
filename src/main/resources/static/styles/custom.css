@@ -25,6 +25,7 @@
 }
 .ps__button:hover {
   transform: scale(0.95);
+  color: white;
 }
 
 .ps__bluebg {
@@ -45,6 +46,14 @@
 }
 .ps__card:hover {
   transform: scale(0.95);
+}
+
+.ps__cardhalf {
+  min-height: 50%;
+}
+
+.ps__width {
+  width: 7rem;
 }
 
 @-webkit-keyframes riseUp {

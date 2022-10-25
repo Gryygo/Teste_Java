@@ -5,14 +5,12 @@ $bg-blue: #4483B3;
 $bg-bluelight: #e6f4ff;
 
 .ps__body {
-    // background-color: $bg-blue;
     overflow: hidden;
 }
 
 .ps__container {
     height: 90vh;
     min-height: 90vh;
-    // border: 2px solid black;
 } 
 
 .ps__navbar {
@@ -33,7 +31,8 @@ $bg-bluelight: #e6f4ff;
 
     &:hover {
         transform: scale(.95);
-    }
+        color: white;
+    } 
 }
 
 .ps__bluebg {
@@ -53,6 +52,14 @@ $bg-bluelight: #e6f4ff;
     &:hover {
         transform: scale(.95);
     }
+}
+
+.ps__cardhalf {
+    min-height: 50%;
+}
+
+.ps__width {
+    width: 7rem;
 }
 
 @keyframes riseUp {
